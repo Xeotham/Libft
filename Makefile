@@ -1,10 +1,10 @@
-#============ COMPILATOR ============#
+#================ COMPILATOR ================#
 CC = cc
-#============ FLAGS ============#
+#=================== FLAGS ==================#
 FLAGS = -Wall -Wextra -Werror
-#============ NAME ============#
+#=================== NAME ===================#
 NAME = libft.a
-#============ MANDATORY SOUCES ============#
+#============= MANDATORY SOUCES =============#
 SRCS = ft_isalpha.c \
 	ft_isdigit.c \
 	ft_isalnum.c \
@@ -39,7 +39,7 @@ SRCS = ft_isalpha.c \
 	ft_putendl_fd.c \
 	ft_putnbr_fd.c \
 	ft_split.c
-#============ BONUS SOURCES ============#
+#=============== BONUS SOURCES ==============#
 BONUS = ft_lstnew.c \
 	ft_lstadd_front.c \
 	ft_lstsize.c \
@@ -50,6 +50,12 @@ BONUS = ft_lstnew.c \
 	ft_lstiter.c \
 	ft_lstmap.c
 
+#============== PRINTF SOURCES ==============#
+PRINTF = ft_printf.c \
+	printf_char_print.c \
+	printf_nbr_print.c \
+	printf_hex_print.c
+
 #============ TRANSFORM .c TO .o ============#
 #============== MANDATORY PART ==============#
 OBJM = $(SRCS:.c=.o)
@@ -57,22 +63,29 @@ OBJM = $(SRCS:.c=.o)
 #================ BONUS PART ================#
 OBJB = $(BONUS:.c=.o)
 
-#============ EXECUTABLE PART ============#
+#================ BONUS PART ================#
+OBJPR = $(PRINTF:.c=.o)
+
+#============== EXECUTABLE PART =============#
+
 all : $(NAME)
+	@echo "\033[32;47;1m** libft.a created **\033[0m"
 
-$(NAME) : $(OBJM)
-	ar rcs $(NAME) $(OBJM)
+$(NAME) : $(OBJB) $(OBJM) $(OBJPR)
+	@ar rcs $(NAME) $(OBJB) $(OBJM) $(OBJPR)
 
-%.o : %.c libft.h
-	$(CC) $(FLAGS) -c $< -o $@
+	
+%.o : %.c libft.h ft_printf.h
+	@$(CC) $(FLAGS) -c $< -o $@
 
 clean :
-	rm -rf *.o
+	@rm -rf $(OBJB) $(OBJM) $(OBJPR)
+	@echo "\033[32;47;1m** cleaned **\033[0m"
 
-fclean : clean
-	rm -rf $(NAME)
+fclean :
+	@rm -rf $(NAME) $(OBJB) $(OBJM) $(OBJPR)
+	@echo "\033[32;47;1m** fcleaned **\033[0m"
 
 re : fclean all
 
-bonus : $(OBJB) $(OBJM)
-	ar rcs $(NAME) $(OBJB) $(OBJM)
+.PHONY : all clean fclean re
